@@ -44,8 +44,15 @@ app.get("/",(req,res)=>{
   console.log("server is working !");
   res.send("hii , i am root !")
 });
-
+//index route
 app.get("/listing",async (eeq,res)=>{
   const allList=await Listing.find({});
   res.render("listing/app.ejs",{allList});
+});
+
+//show route
+app.get("/listing/:id",async (req,res)=>{
+  let {id}=req.params;
+  const listing=await Listing.findById(id);
+  res.render("listing/show.ejs",{listing})
 })
