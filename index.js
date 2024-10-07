@@ -3,10 +3,12 @@ const app=express();
 const mongoose=require("mongoose");
 const Listing=require("./models/listing");
 const path=require("path");
+const methodOverride=require("method-override");
 
 app.set("views",path.join(__dirname,"views"));
 app.set("view engine","ejs");
 app.use(express.urlencoded({extended:true}));
+app.use(methodOverride("_method"));
 
 main().then((res)=>{
   console.log("connection succesfull !");
@@ -88,3 +90,20 @@ try{
 
 });
 
+//edit route
+app.get("/listing/:id/Edit",async(req,res)=>{
+try{
+  let{id}=req.params;
+  let listing=await Listing.findById(id);
+  if (!listing) {
+    return res.status(404).send("Listing not found");
+  }
+  res.render("listing/edit.ejs",{listing});
+}catch(er){
+  console.log(er);
+}
+});
+//update route
+app.path("/listing/:id",(req,res)=>{
+  
+})
