@@ -104,6 +104,37 @@ try{
 }
 });
 //update route
-app.path("/listing/:id",(req,res)=>{
-  
-})
+app.patch("/listing/:id",async(req,res)=>{
+  try{
+    let{id}=req.params;
+    let{
+      title:title,
+      description:description,
+      price:price,
+      location:location,
+      country:country,
+    }=req.body
+    const updateData=await Listing.findByIdAndUpdate(id,{
+      title:title,
+      description:description,
+      price:price,
+      location:location,
+      country:country,
+    });
+    console.log(updateData);
+    res.redirect("/listing");
+  }catch(e){
+    console.log(e);
+  }
+});
+//delete route
+app.delete("/listing/:id",async(req,res)=>{
+  try{
+    let{id}=req.params;
+    const deleteData=await Listing.findByIdAndDelete(id);
+    console.log(deleteData);
+    res.redirect("/listing");
+  }catch(e){
+    console.log(e);
+  }
+});
