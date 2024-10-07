@@ -6,7 +6,7 @@ const path=require("path");
 
 app.set("views",path.join(__dirname,"views"));
 app.set("view engine","ejs");
-
+app.use(express.urlencoded({extended:true}));
 
 main().then((res)=>{
   console.log("connection succesfull !");
@@ -19,7 +19,7 @@ async function main() {
 
   // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
 }
-app.listen(8080,()=>{
+app.listen(3000,()=>{
   console.log(`Serveris running on port 8080`)
 });
 
@@ -50,9 +50,41 @@ app.get("/listing",async (eeq,res)=>{
   res.render("listing/app.ejs",{allList});
 });
 
+//new route
+app.get("/listing/new",(req,res)=>{
+  try{
+    res.render("listing/new.ejs");
+  }catch(error){
+    console.log(error);
+  }
+})
 //show route
 app.get("/listing/:id",async (req,res)=>{
   let {id}=req.params;
   const listing=await Listing.findById(id);
   res.render("listing/show.ejs",{listing})
-})
+});
+
+// create route
+app.post("/listing",async (req,res)=>{
+try{
+  let{title,description,price,location,country}=req.body;
+  let newData=new Listing({
+    title:title,
+    description:description,
+    price:price,
+    location:location,
+    country:country,
+  });
+  await newData.save().then(()=>{
+    console.log("Data was saved !");
+  }).catch((er)=>{
+    console.log(er);
+  })
+  res.redirect("/listing")
+}catch(err){
+  console.log(err);
+}
+
+});
+
