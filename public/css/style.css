@@ -93,4 +93,16 @@ row{
   opacity: 0.2;
 } 
 
-/* newlisting effect */
+/* show */
+.show-img{
+  height: 40vh;
+  width: 79vh !important;
+} 
+.action{
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1rem;
+}
+.delete{
+  margin-left: 1rem;
+} 
