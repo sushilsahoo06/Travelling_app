@@ -1,28 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WanderLust</title>
-</head>
-<h3>Create a new Listing</h3>
-<body>
-  <form method="post" action="/listing">
-    <input name="title" placeholder="enter title" type="text">
-    <br><br>
-    <textarea name="description" placeholder="enter description"></textarea>
-    <br><br>
-    <input name="image" placeholder="enter URL/Link" type="text">
-    <br><br>
-    <input name="price" placeholder="enter price" type="number">
-    <br><br>
-    <input name="location" placeholder="enter location" type="text">
-    <br><br>
-    <input name="country" placeholder="enter country" type="text">
-    <br><br>
 
-    <button>Add</button>
+<% layout("/layouts/boilerplate") %>
 
-  </form>
-</body>
-</html>
+<div class="row mt-3">
+  <div class="col-8">
+  <h3>Create a new Listing</h3>
+  
+    <form method="post" action="/listing">
+      <div class="mb-3">
+        <label for="titale" class="form-label">Titale</label>
+        <input name="title" placeholder="Add a catchy Titale" type="text" class="form-control" id="titale">
+      </div>
+    
+      <diV class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea name="description" placeholder="enter description" id="description" class="form-control"></textarea>
+      </diV>
+    
+      <diV class="mb-3">
+        <label for="image" class="form-label">Image</label>
+        <input name="image" placeholder="enter URL/Link" type="text" class="form-control" id="image">
+      </diV>
+      
+      <div class="row">
+        <div class="mb-3 col-md-4">
+          <label for="price" class="form-label">Price</label>
+          <input name="price" placeholder="1200" type="number" id="price" class="form-control">
+        </div>
+        <diV class="mb-3 col-md-8">
+          <label for="country" class="form-label">Country</label>
+          <input name="country" placeholder="india" type="text" class="form-control">
+        </diV>
+      </div>
+
+    
+      <div class="mb-3">
+        <label for="location" class="form-label">Location</label>
+        <input name="location" placeholder="odisha , Jaipur" type="text" id="location" class="form-control">
+      </div>
+   
+
+      <br><br>
+      <button class=" btn btn-outline-danger mb-5">Add</button>
+
+    </form>
+  </div>
+</div>
+

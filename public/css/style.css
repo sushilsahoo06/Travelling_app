@@ -4,6 +4,14 @@
   font-weight: 400;
   font-style: normal;
 }
+body{
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+}
+.container{
+  flex: 1;
+}
 .navbar-nav a{
   font-weight: bold;
   font-size: larger;
@@ -77,3 +85,12 @@ row{
 .card-text p{
   font-weight: 400;
 }
+.card-img-overlay{
+   opacity: 0;
+}
+.card-img-overlay:hover{
+  background-color:white;
+  opacity: 0.2;
+} 
+
+/* newlisting effect */
