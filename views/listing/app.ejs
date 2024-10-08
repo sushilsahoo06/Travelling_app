@@ -1,18 +1,23 @@
 <% layout("/layouts/boilerplate") %>
-<body>
-  <div class="row row-col-lg-4 row-col-md-3 row-col-sm-1">
-    <% for(let listing of allList) {%>
-      <div class="card" style="width: 20rem;">
-        <img src="<%= listing.image.url %>" class="card-img-top" alt="listingimage">
-        <div class="card-body">
-          <p class="card-text">
-            <%= listing.title %><br>
-            &#8377; <%= listing.price.toLocaleString("en-IN") %>
-          </p>
-        </div>
+<div class="row row-col-lg-4 row-col-md-3 row-col-sm-2 mt-3">
+  <% for(let listing of allList) {%>
+
+    <div class="card mt-3" style="width: 20rem;">
+
+      <a href="/listing/<%= listing._id %>" class="stretched-link">
+        <img src="<%= listing.image.url %>" class="card-img-top" alt="listingimage" style="height: 20rem;">
+      </a>
+      <div class="card-body shadow-sm p-3 mb-5 bg-body-tertiary rounded">
+        <p class="card-text">
+          <b><%= listing.title %><br></b>
+          &#8377; <%= listing.price.toLocaleString("en-IN") %>
+        </p>
       </div>
-      <% } %>
-  </div>
+      
+    </div>
+
+  <% } %>
+</div>
 
   <!-- <ul>
     <% for(let listing of allList) {%>
