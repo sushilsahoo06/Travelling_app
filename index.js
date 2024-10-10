@@ -50,7 +50,7 @@ app.get("/",(req,res)=>{
   res.send("hii , i am root !")
 });
 //index route
-app.get("/listing",async (eeq,res)=>{
+app.get("/listing",async (req,res)=>{
   const allList=await Listing.find({});
   res.render("listing/app.ejs",{allList});
 });
@@ -62,7 +62,7 @@ app.get("/listing/new",(req,res)=>{
   }catch(error){
     console.log(error);
   }
-})
+});
 //show route
 app.get("/listing/:id",async (req,res)=>{
   let {id}=req.params;
