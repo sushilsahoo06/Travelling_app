@@ -56,11 +56,11 @@ app.get("/listing",async (req,res)=>{
 });
 
 //new route
-app.get("/listing/new",(req,res)=>{
+app.get("/listing/new",(req,res,next)=>{
   try{
     res.render("listing/new.ejs");
   }catch(error){
-    console.log(error);
+    next(err)
   }
 });
 //show route
@@ -140,4 +140,9 @@ app.delete("/listing/:id",async(req,res)=>{
   }catch(e){
     console.log(e);
   }
+});
+
+// error middle wire
+app.use((next,req,res,err)=>{
+  res.send("something went wrong !");
 });

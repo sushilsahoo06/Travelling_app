@@ -9,26 +9,35 @@
       <div class="mb-3">
         <label for="titale" class="form-label">Titale</label>
         <input name="title" placeholder="Add a catchy Titale" type="text" class="form-control " id="titale" required>
+        <div class="valid-feedback">Looks good</div>
+        <div class="invalid-feedback">Please provide a valid Titale.</div>
       </div>
     
       <diV class="mb-3">
         <label for="description" class="form-label">Description</label>
         <textarea name="description" placeholder="enter description" id="description" class="form-control" required></textarea>
+        <div class="valid-feedback">Looks good</div>
+        <div class="invalid-feedback">Please provide a valid Description.</div>        
       </diV>
     
       <diV class="mb-3">
         <label for="image" class="form-label">Image</label>
-        <input name="image" placeholder="enter URL/Link" type="text" class="form-control" id="image">
+        <input name="image" placeholder="enter URL/Link" type="text" class="form-control" id="image" required>
+        <div class="invalid-feedback">Please select a image URL.</div>
       </diV>
       
       <div class="row">
         <div class="mb-3 col-md-4">
           <label for="price" class="form-label">Price</label>
           <input name="price" placeholder="1200" type="number" id="price" class="form-control" required>
+          <div class="valid-feedback">Looks good</div>
+          <div class="invalid-feedback">Please select a valid price.</div>
         </div>
         <diV class="mb-3 col-md-8">
           <label for="country" class="form-label">Country</label>
           <input name="country" placeholder="india" type="text" class="form-control" required>
+          <div class="valid-feedback">Looks good</div>
+          <div class="invalid-feedback">Please select a valid state.</div>
           
         </diV>
       </div>
@@ -37,6 +46,8 @@
       <div class="mb-3">
         <label for="location" class="form-label">Location</label>
         <input name="location" placeholder="odisha , Jaipur" type="text" id="location" class="form-control" required>
+        <div class="valid-feedback">Looks good</div>
+        <div class="invalid-feedback">Please select a valid Location.</div>
       </div>
    
 
