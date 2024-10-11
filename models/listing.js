@@ -27,7 +27,14 @@ const listingSchema= new Schema({
     type:String
   },
   country:{
-    type:String
+    type:String,
+    required:true,    
+    validate: {
+      validator: function(v) {
+        return /^[A-Za-z\s]+$/.test(v);  // Only allows alphabetic characters and spaces
+      }
+      //message: props => `${props.value} is not a valid country name!`
+    }
   }
 }, { timestamps: true });
 const Listing=mongoose.model("Listing",listingSchema);//creat a model

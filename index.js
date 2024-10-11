@@ -71,7 +71,7 @@ app.get("/listing/:id",async (req,res)=>{
 });
 
 // create route
-app.post("/listing",async (req,res)=>{
+app.post("/listing",async (req,res,next)=>{
 try{
   let{title,description,price,location,country}=req.body;
   let newData=new Listing({
@@ -88,7 +88,7 @@ try{
   })
   res.redirect("/listing")
 }catch(err){
-  console.log(err);
+  next(err);
 }
 
 });
