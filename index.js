@@ -5,6 +5,8 @@ const Listing=require("./models/listing");
 const path=require("path");
 const methodOverride=require("method-override");
 const ejsMate=require("ejs-mate");
+const wrapAsync=require("./utils/wrapAsync");
+const ExpressError=require("./utils/expressError");
 
 app.set("views",path.join(__dirname,"views"));
 app.set("view engine","ejs");
@@ -64,16 +66,18 @@ app.get("/listing/new",(req,res,next)=>{
   }
 });
 //show route
-app.get("/listing/:id",async (req,res)=>{
+app.get("/listing/:id",wrapAsync(async(req,res)=>{
   let {id}=req.params;
   const listing=await Listing.findById(id);
   res.render("listing/show.ejs",{listing})
-});
+}));
 
 // create route
-app.post("/listing",async (req,res,next)=>{
-try{
+app.post("/listing",wrapAsync(async (req,res,next)=>{
   let{title,description,price,location,country}=req.body;
+  if (!req.body) {
+    throw new ExpressError(400, "page not found ! ");  // Optional validation check
+  }
   let newData=new Listing({
     title:title,
     description:description,
@@ -87,28 +91,22 @@ try{
     console.log(er);
   })
   res.redirect("/listing")
-}catch(err){
-  next(err);
-}
-
-});
+}));
 
 //edit route
-app.get("/listing/:id/Edit",async(req,res)=>{
-try{
+app.get("/listing/:id/Edit",wrapAsync(async(req,res)=>{
+
   let{id}=req.params;
   let listing=await Listing.findById(id);
   if (!listing) {
     return res.status(404).send("Listing not found");
   }
   res.render("listing/edit.ejs",{listing});
-}catch(er){
-  console.log(er);
-}
-});
+
+}));
 //update route
-app.patch("/listing/:id",async(req,res)=>{
-  try{
+app.patch("/listing/:id",wrapAsync(async(req,res)=>{
+  
     let{id}=req.params;
     let{
       title:title,
@@ -126,12 +124,10 @@ app.patch("/listing/:id",async(req,res)=>{
     });
     console.log(updateData);
     res.redirect("/listing");
-  }catch(e){
-    console.log(e);
-  }
-});
+
+}));
 //delete route
-app.delete("/listing/:id",async(req,res)=>{
+app.delete("/listing/:id",wrapAsync(async(req,res)=>{
   try{
     let{id}=req.params;
     const deleteData=await Listing.findByIdAndDelete(id);
@@ -140,9 +136,17 @@ app.delete("/listing/:id",async(req,res)=>{
   }catch(e){
     console.log(e);
   }
-});
+}));
 
 // error middle wire
-app.use((next,req,res,err)=>{
-  res.send("something went wrong !");
+app.use((err, req, res, next) => {
+  console.error("Error caught:", err);
+  const { statusCode = 500, message = "Something went wrong!" } = err;
+  res.status(statusCode).render("error.ejs",{status:"error",message})
+  res.status(statusCode).send({status:"error",message});
+});
+
+
+app.all("*", (req, res, next) => {
+  next(new ExpressError(404, "Page not found!"));
 });
