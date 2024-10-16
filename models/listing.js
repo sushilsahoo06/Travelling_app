@@ -29,6 +29,9 @@ const listingSchema= new Schema({
   country:{
     type:String,
     required:true,
+    validator:function(v){
+      return /^[a-zA-Z\s]+$/.test(v);
+    }
   }
 }, { timestamps: true });
 const Listing=mongoose.model("Listing",listingSchema);//creat a model

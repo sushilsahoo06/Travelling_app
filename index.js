@@ -52,10 +52,10 @@ app.get("/",(req,res)=>{
   res.send("hii , i am root !")
 });
 //index route
-app.get("/listing",async (req,res)=>{
+app.get("/listing",wrapAsync(async(req,res)=>{
   const allList=await Listing.find({});
   res.render("listing/app.ejs",{allList});
-});
+}));
 
 //new route
 app.get("/listing/new",(req,res,next)=>{
@@ -75,8 +75,11 @@ app.get("/listing/:id",wrapAsync(async(req,res)=>{
 // create route
 app.post("/listing",wrapAsync(async (req,res,next)=>{
   let{title,description,price,location,country}=req.body;
-  if (!req.body) {
-    throw new ExpressError(400, "page not found ! ");  // Optional validation check
+  // if (!listing) {
+  //   return res.status(404).send("Listing not found");
+  // };
+  if (!country.match(/^[a-zA-Z\s]+$/)) {
+    throw new ExpressError(400, "Invalid country name. Only letters are allowed.");  // Optional validation check
   }
   let newData=new Listing({
     title:title,
@@ -85,12 +88,8 @@ app.post("/listing",wrapAsync(async (req,res,next)=>{
     location:location,
     country:country,
   });
-  await newData.save().then(()=>{
-    console.log("Data was saved !");
-  }).catch((er)=>{
-    console.log(er);
-  })
-  res.redirect("/listing")
+  await newData.save();
+  res.redirect("/listing");
 }));
 
 //edit route
@@ -100,7 +99,7 @@ app.get("/listing/:id/Edit",wrapAsync(async(req,res)=>{
   let listing=await Listing.findById(id);
   if (!listing) {
     return res.status(404).send("Listing not found");
-  }
+  };
   res.render("listing/edit.ejs",{listing});
 
 }));
@@ -128,25 +127,33 @@ app.patch("/listing/:id",wrapAsync(async(req,res)=>{
 }));
 //delete route
 app.delete("/listing/:id",wrapAsync(async(req,res)=>{
-  try{
     let{id}=req.params;
     const deleteData=await Listing.findByIdAndDelete(id);
     console.log(deleteData);
     res.redirect("/listing");
-  }catch(e){
-    console.log(e);
-  }
 }));
 
 // error middle wire
 app.use((err, req, res, next) => {
-  console.error("Error caught:", err);
+  console.log(err.name);// Log the error for debugging
   const { statusCode = 500, message = "Something went wrong!" } = err;
-  res.status(statusCode).render("error.ejs",{status:"error",message})
-  res.status(statusCode).send({status:"error",message});
+
+  // If the request expects HTML (e.g., from a browser)
+  if (req.accepts('html')) {
+    res.status(statusCode).render("error/error.ejs",{statusCode,message})
+  } 
+
+  // If the request is API-based and expects JSON
+  else if (req.accepts('json')) {
+    res.status(statusCode).json({ error: message });
+  } 
+
+  // Fallback to plain text for other types of requests
+  else {
+    res.status(statusCode).send(message);
+  }
 });
 
-
-app.all("*", (req, res, next) => {
-  next(new ExpressError(404, "Page not found!"));
-});
+app.use((req,res)=>{
+  res.status(404).render("error/404.ejs");
+}); // Render custom 404 page
