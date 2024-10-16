@@ -7,6 +7,7 @@ const methodOverride=require("method-override");
 const ejsMate=require("ejs-mate");
 const wrapAsync=require("./utils/wrapAsync");
 const ExpressError=require("./utils/expressError");
+const {listingSchema}=require("./Schema.js");
 
 app.set("views",path.join(__dirname,"views"));
 app.set("view engine","ejs");
@@ -30,6 +31,7 @@ app.listen(3000,()=>{
   console.log(`Serveris running on port 8080`)
 });
 
+
 // app.get("/sampleListing",async(req,res)=>{
 //   try{
 //     let newListing= new Listing({
@@ -47,6 +49,17 @@ app.listen(3000,()=>{
 //     res.status(500).send("Error saving listing.");
 //   }
 // });
+
+//validation error for Schema
+const validateListing=(req,res,next)=>{
+  let {error} =listingSchema.validate(req.body);
+  if (error) {
+    let ermsg=listingSchema.validate.map((e)=>e.message).join(",");
+   throw new ExpressError(400,ermsg);  // Optional validation check
+ }else{
+  next();
+ }
+}
 app.get("/",(req,res)=>{
   console.log("server is working !");
   res.send("hii , i am root !")
@@ -73,14 +86,8 @@ app.get("/listing/:id",wrapAsync(async(req,res)=>{
 }));
 
 // create route
-app.post("/listing",wrapAsync(async (req,res,next)=>{
+app.post("/listing",validateListing,wrapAsync(async (req,res,next)=>{
   let{title,description,price,location,country}=req.body;
-  // if (!listing) {
-  //   return res.status(404).send("Listing not found");
-  // };
-  if (!country.match(/^[a-zA-Z\s]+$/)) {
-    throw new ExpressError(400, "Invalid country name. Only letters are allowed.");  // Optional validation check
-  }
   let newData=new Listing({
     title:title,
     description:description,
@@ -104,7 +111,7 @@ app.get("/listing/:id/Edit",wrapAsync(async(req,res)=>{
 
 }));
 //update route
-app.patch("/listing/:id",wrapAsync(async(req,res)=>{
+app.patch("/listing/:id",validateListing,wrapAsync(async(req,res)=>{
   
     let{id}=req.params;
     let{
