@@ -1,4 +1,5 @@
 const mongoose=require("mongoose");
+const { type } = require("../Schema");
 const Schema=mongoose.Schema;
 
 const listingSchema= new Schema({
@@ -32,7 +33,13 @@ const listingSchema= new Schema({
     validator:function(v){
       return /^[a-zA-Z\s]+$/.test(v);
     }
-  }
+  },
+  reviews:[
+    {
+      type:Schema.Types.ObjectId,
+      Ref:"Review"
+    }
+  ]
 }, { timestamps: true });
 const Listing=mongoose.model("Listing",listingSchema);//creat a model
 
