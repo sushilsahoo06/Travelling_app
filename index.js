@@ -8,6 +8,8 @@ const ejsMate=require("ejs-mate");
 const wrapAsync=require("./utils/wrapAsync");
 const ExpressError=require("./utils/expressError");
 const {listingSchema}=require("./Schema.js");
+const Review = require("./models/review.js");
+
 
 app.set("views",path.join(__dirname,"views"));
 app.set("view engine","ejs");
@@ -139,7 +141,22 @@ app.delete("/listing/:id",wrapAsync(async(req,res)=>{
     console.log(deleteData);
     res.redirect("/listing");
 }));
+//Reviews
 
+app.post("/listing/:id/reviews",wrapAsync(async(req,res)=>{
+  let listing=await Listing.findById(req.params.id);
+  let{Comment,Rating}=req.body;
+  let newReview=new Review({
+    Comment:Comment,
+    Rating:Rating
+  });
+  await newReview.save();
+  listing.reviews.push(newReview._id);// push the data listing of reviews(one many relactions)
+  await listing.save();
+
+  console.log("new review saved !");
+  res.redirect(`/listing/${listing._id}`);
+}));
 // error middle wire
 app.use((err, req, res, next) => {
   console.log(err.name);// Log the error for debugging

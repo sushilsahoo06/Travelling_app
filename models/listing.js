@@ -1,5 +1,4 @@
 const mongoose=require("mongoose");
-const { type } = require("../Schema");
 const Schema=mongoose.Schema;
 
 const listingSchema= new Schema({
