@@ -36,7 +36,7 @@ const listingSchema= new Schema({
   reviews:[
     {
       type:Schema.Types.ObjectId,
-      Ref:"Review"
+      ref:"Review"
     }
   ]
 }, { timestamps: true });
