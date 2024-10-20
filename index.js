@@ -7,7 +7,7 @@ const methodOverride=require("method-override");
 const ejsMate=require("ejs-mate");
 const wrapAsync=require("./utils/wrapAsync");
 const ExpressError=require("./utils/expressError");
-const {listingSchema}=require("./Schema.js");
+const {listingSchema,reviewSchema}=require("./Schema.js");
 const Review = require("./models/review.js");
 
 
@@ -21,7 +21,7 @@ app.use(express.static("public"));
 main().then((res)=>{
   console.log("connection succesfull !");
 }).catch((er)=>{
-  console.log(er)
+  console.log(er);
 })
 
 async function main() {
@@ -61,7 +61,7 @@ const validateListing=(req,res,next)=>{
  }else{
   next();
  }
-}
+};
 app.get("/",(req,res)=>{
   console.log("server is working !");
   res.send("hii , i am root !")
@@ -141,9 +141,19 @@ app.delete("/listing/:id",wrapAsync(async(req,res)=>{
     console.log(deleteData);
     res.redirect("/listing");
 }));
+//review validaction
+const validateReview=(req,res,next)=>{
+  let {error} =reviewSchema.validate(req.body);
+  if (error) {
+    let ermsg=reviewSchema.validate.map((e)=>e.message).join(",");
+   throw new ExpressError(400,ermsg);  // Optional validation check
+ }else{
+  next();
+ }
+};
 //Reviews
 
-app.post("/listing/:id/reviews",wrapAsync(async(req,res)=>{
+app.post("/listing/:id/reviews",validateReview,wrapAsync(async(req,res)=>{
   let listing=await Listing.findById(req.params.id);
   let{Comment,Rating}=req.body;
   let newReview=new Review({

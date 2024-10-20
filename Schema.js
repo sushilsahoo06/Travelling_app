@@ -13,3 +13,12 @@ const listingSchema=joi.object({
 });
 
 module.exports=listingSchema;
+
+//review schema
+module.exports.reviewSchema=joi.object({
+  Review:joi.object({
+    Comment:joi.string().required(),
+    Rating:joi.number().required()
+
+  }).required()
+});
