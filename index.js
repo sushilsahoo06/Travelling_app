@@ -83,7 +83,7 @@ app.get("/listing/new",(req,res,next)=>{
 //show route
 app.get("/listing/:id",wrapAsync(async(req,res)=>{
   let {id}=req.params;
-  const listing=await Listing.findById(id);
+  const listing=await Listing.findById(id).populate("reviews");
   res.render("listing/show.ejs",{listing})
 }));
 
@@ -145,7 +145,7 @@ app.delete("/listing/:id",wrapAsync(async(req,res)=>{
 const validateReview=(req,res,next)=>{
   let {error} =reviewSchema.validate(req.body);
   if (error) {
-    let ermsg=reviewSchema.validate.map((e)=>e.message).join(",");
+    let ermsg=error.details.map((e)=>e.message).join(",");
    throw new ExpressError(400,ermsg);  // Optional validation check
  }else{
   next();
@@ -167,6 +167,8 @@ app.post("/listing/:id/reviews",validateReview,wrapAsync(async(req,res)=>{
   console.log("new review saved !");
   res.redirect(`/listing/${listing._id}`);
 }));
+
+
 // error middle wire
 app.use((err, req, res, next) => {
   console.log(err.name);// Log the error for debugging
